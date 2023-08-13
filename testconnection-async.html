@@ -18,48 +18,42 @@
     const resultElement = document.getElementById('result');
     const timeElement = document.getElementById('time');
 
-    pingButton.addEventListener('click', () => {
+    pingButton.addEventListener('click', async () => {
       timeElement.textContent = '';
 
-      function ping(host, port) {
-        return new Promise((resolve, reject) => {
-          var started = new Date().getTime();
-          var http = new XMLHttpRequest();
+      function ping(host, port, pong) {
+        var started = new Date().getTime();
+        var http = new XMLHttpRequest();
 
-          http.open("GET", host + ":" + port, true);
-          http.onreadystatechange = function() {
-            if (http.readyState == 4) {
-              var ended = new Date().getTime();
-              var milliseconds = ended - started;
-              resolve(milliseconds);
+        http.open("GET", host + ":" + port, true);
+        http.onreadystatechange = function() {
+          if (http.readyState == 4) {
+            var ended = new Date().getTime();
+            var milliseconds = ended - started;
+
+            if (pong != null) {
+              pong(milliseconds);
             }
-          };
-          try {
-            http.send(null);
-          } catch(exception) {
-            reject(exception);
           }
-        });
-      }
-
-      function delay(milliseconds){
-        return new Promise(resolve => {
-          setTimeout(resolve, milliseconds);
-        });
-      }
-
-      async function testHosts(host, port, label) {
-        const pings = [];
-        resultElement.innerHTML += `${label} (${host}): `;
-        for (let i = 0; i < 3; i++) {
-          const milliseconds = await ping(host, port);
-          pings.push(milliseconds);
-          resultElement.innerHTML += `${milliseconds.toFixed(2)}, `;
+        };
+        try {
+          http.send(null);
+        } catch(exception) {
+          // this is expected
         }
-        const averagePing = pings.reduce((sum, value) => sum + value, 0) / pings.length;
-        resultElement.innerHTML += `average ${averagePing.toFixed(2)}<br>`;
       }
+      
 
+
+function delay(milliseconds){
+    return new Promise(resolve => {
+        setTimeout(resolve, milliseconds);
+    });
+}
+
+
+async function init(){
+		
       fetch('https://ipapi.co/json/')
         .then(response => response.json())
         .then(data => {
@@ -68,19 +62,102 @@
         .catch(error => {
           console.error('<br>Error fetching ISP information:', error);
           resultElement.innerHTML = "ISP: Unknown (Error fetching ISP information: " + error + ")";
-        })
-        .finally(async () => {
-          resultElement.innerHTML += "<br><br>";
-          await delay(2000);
-          resultElement.innerHTML += "<h2>Test results (in milliseconds):</h2>";
-          //await testHosts("http://192.168.0.1/login", "80", "ERIA (Senayan) router");
-          await testHosts("https://www.linknet.co.id", "443", "Linknet");
-          await testHosts("https://www.telkom.co.id", "443", "Telkom");
-          await testHosts("https://www.biznetnetworks.com", "443", "Biznet");
-          await testHosts("https://www.detik.com", "443", "Detik");
-          await testHosts("https://internetbeacon.msedge.net", "443", "Microsoft");
-          await testHosts("https://www.google.com", "443", "Google");
         });
+	resultElement.innerHTML += "<br><br>";
+
+    await delay(2000);
+
+	resultElement.innerHTML += "<p>Test result: </p>";
+
+      ping("http://192.168.0.1/login", "80", function(milliseconds) {
+        resultElement.innerHTML += "ERIA (Senayan) router (http://192.168.0.1): " + milliseconds + "ms";
+      });
+      ping("http://192.168.0.1/login", "80", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms";
+      });
+      ping("http://192.168.0.1/login", "80", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms<br>";
+      });
+
+    await delay(2000);
+
+      ping("https://www.linknet.co.id", "443", function(milliseconds) {
+        resultElement.innerHTML += "Linknet (https://www.linknet.co.id): " + milliseconds + "ms";
+      });
+      ping("https://www.linknet.co.id", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms";
+      });
+      ping("https://www.linknet.co.id", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms<br>";
+      });
+
+    await delay(2000);
+
+      ping("https://www.telkom.co.id", "443", function(milliseconds) {
+        resultElement.innerHTML += "Telkom (https://www.telkom.co.id): " + milliseconds + "ms";
+      });
+      ping("https://www.telkom.co.id", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms";
+      });
+      ping("https://www.telkom.co.id", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms<br>";
+      });
+
+
+    await delay(2000);
+
+      ping("https://www.biznetnetworks.com", "443", function(milliseconds) {
+        resultElement.innerHTML += "Biznet (https://www.biznetnetworks.com): " + milliseconds + "ms";
+      });
+      ping("https://www.biznetnetworks.com", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms";
+      });
+      ping("https://www.biznetnetworks.com", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms<br>";
+      });
+
+    await delay(2000);
+
+      ping("https://www.detik.com", "443", function(milliseconds) {
+        resultElement.innerHTML += "Detik (https://www.detik.com): " + milliseconds +  "ms";
+      });
+      ping("https://www.detik.com", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms";
+      });
+      ping("https://www.detik.com", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms<br>";
+      });
+
+    await delay(2000);
+
+      ping("https://internetbeacon.msedge.net", "443", function(milliseconds) {
+        resultElement.innerHTML += "Microsoft (https://internetbeacon.msedge.net): " + milliseconds + "ms";
+      });
+      ping("https://internetbeacon.msedge.net", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms";
+      });
+      ping("https://internetbeacon.msedge.net", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms<br>";
+      });
+
+    await delay(2000);
+
+      ping("https://www.google.com", "443", function(milliseconds) {
+        resultElement.innerHTML += "Google (https://www.google.com): " + milliseconds + "ms";
+      });
+      ping("https://www.google.com", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms";
+      });
+      ping("https://www.google.com", "443", function(milliseconds) {
+        resultElement.innerHTML += " " + milliseconds + "ms<br>";
+      });
+
+}
+
+init();
+
+
+
     });
   </script>
 </body>
