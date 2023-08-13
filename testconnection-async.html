@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Host Ping with Time</title>
+</head>
+<body>
+  <h1>ERIA connection test (Senayan)</h1>
+  <p>This test page is for those in Senayan office<br>
+  Click on the button below to begin testing</p>
+  <button id="pingButton">Test</button>
+  <div id="result"></div>
+  <p id="time"></p>
+
+  <script>
+    const pingButton = document.getElementById('pingButton');
+    const resultElement = document.getElementById('result');
+    const timeElement = document.getElementById('time');
+
+    pingButton.addEventListener('click', () => {
+      timeElement.textContent = '';
+
+      function ping(host, port) {
+        return new Promise((resolve, reject) => {
+          var started = new Date().getTime();
+          var http = new XMLHttpRequest();
+
+          http.open("GET", host + ":" + port, true);
+          http.onreadystatechange = function() {
+            if (http.readyState == 4) {
+              var ended = new Date().getTime();
+              var milliseconds = ended - started;
+              resolve(milliseconds);
+            }
+          };
+          try {
+            http.send(null);
+          } catch(exception) {
+            reject(exception);
+          }
+        });
+      }
+
+      function delay(milliseconds){
+        return new Promise(resolve => {
+          setTimeout(resolve, milliseconds);
+        });
+      }
+
+      async function testHosts(host, port, label) {
+        const pings = [];
+        resultElement.innerHTML += `${label} (${host}): `;
+        for (let i = 0; i < 3; i++) {
+          const milliseconds = await ping(host, port);
+          pings.push(milliseconds);
+          resultElement.innerHTML += `${milliseconds.toFixed(2)}, `;
+        }
+        const averagePing = pings.reduce((sum, value) => sum + value, 0) / pings.length;
+        resultElement.innerHTML += `average ${averagePing.toFixed(2)}<br>`;
+      }
+
+      fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+          resultElement.innerHTML = "<br>ISP: " + data.org;
+        })
+        .catch(error => {
+          console.error('<br>Error fetching ISP information:', error);
+          resultElement.innerHTML = "ISP: Unknown (Error fetching ISP information: " + error + ")";
+        })
+        .finally(async () => {
+          resultElement.innerHTML += "<br><br>";
+          await delay(2000);
+          resultElement.innerHTML += "<h2>Test results (in milliseconds):</h2>";
+          //await testHosts("http://192.168.0.1/login", "80", "ERIA (Senayan) router");
+          await testHosts("https://www.linknet.co.id", "443", "Linknet");
+          await testHosts("https://www.telkom.co.id", "443", "Telkom");
+          await testHosts("https://www.biznetnetworks.com", "443", "Biznet");
+          await testHosts("https://www.detik.com", "443", "Detik");
+          await testHosts("https://internetbeacon.msedge.net", "443", "Microsoft");
+          await testHosts("https://www.google.com", "443", "Google");
+        });
+    });
+  </script>
+</body>
+</html>
