@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speed Test</title>
+</head>
+<body>
+    <h1>Speed Test</h1>
+    <button id="startButton">Start Test</button>
+    <p id="status"></p>
+    <p id="result"></p>
+
+    <script>
+        const startButton = document.getElementById("startButton");
+        const statusElement = document.getElementById("status");
+        const resultElement = document.getElementById("result");
+
+        startButton.addEventListener("click", () => {
+            statusElement.innerText = "Running speed test...";
+            resultElement.innerText = "";
+
+            const fileSizeMB = 10; // Set the file size in MB
+            const fileURL = "https://sample-videos.com/img/Sample-jpg-image-10mb.jpg"; // Replace with your own file URL
+
+            const startTime = performance.now();
+            fetch(fileURL)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    const endTime = performance.now();
+                    const duration = endTime - startTime;
+                    const speedMbps = (fileSizeMB / (duration / 1000)).toFixed(2);
+
+                    statusElement.innerText = `Speed test completed in ${duration.toFixed(2)} ms`;
+                    resultElement.innerText = `Download speed: ${speedMbps} Mbps`;
+                })
+                .catch(error => {
+                    statusElement.innerText = "An error occurred during the speed test.";
+                    console.error(error);
+                });
+        });
+    </script>
+</body>
+</html>
