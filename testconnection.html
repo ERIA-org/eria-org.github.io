@@ -71,14 +71,19 @@
         })
         .finally(async () => {
           resultElement.innerHTML += "<br><br>";
-          await delay(2000);
           resultElement.innerHTML += "<h2>Test results (in milliseconds):</h2>";
           await testHosts("http://192.168.0.1/login", "80", "ERIA (Senayan) router");
+          await delay(1000);
           await testHosts("https://www.linknet.co.id", "443", "Linknet");
+          await delay(1000);
           await testHosts("https://www.telkom.co.id", "443", "Telkom");
+          await delay(1000);
           await testHosts("https://www.biznetnetworks.com", "443", "Biznet");
+          await delay(1000);
           await testHosts("https://www.detik.com", "443", "Detik");
+          await delay(1000);
           await testHosts("https://internetbeacon.msedge.net", "443", "Microsoft");
+          await delay(1000);
           await testHosts("https://www.google.com", "443", "Google");
         });
 
