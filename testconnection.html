@@ -81,6 +81,26 @@
           await testHosts("https://internetbeacon.msedge.net", "443", "Microsoft");
           await testHosts("https://www.google.com", "443", "Google");
         });
+
+
+              resultElement.innerHTML += "<br><br>Running speed test...";
+
+const startTime = new Date().getTime();
+const xhr = new XMLHttpRequest();
+xhr.open("GET", "https://sample-videos.com/img/Sample-jpg-image-10mb.jpg", false); // Synchronous request
+xhr.send(null);
+
+if (xhr.status === 200) {
+    const endTime = new Date().getTime();
+    const duration = endTime - startTime;
+    const speed = (10 / (duration / 1000) * 8).toFixed(2); // Speed in Mbps
+    resultElement.innerHTML += `Speed test completed in ${duration} ms<br>`;
+    resultElement.innerHTML += `Download speed: ${speed} Mbps`;
+} else {
+    resultElement.innerHTML += "Speed test failed";
+}
+
+      
     });
   </script>
 </body>
