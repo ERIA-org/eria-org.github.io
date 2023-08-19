@@ -66,7 +66,14 @@
             if (http.readyState == 4) {
               var ended = new Date().getTime();
               var milliseconds = ended - started;
-              resolve(milliseconds);
+
+              if (http.status >= 200 && http.status < 300) {
+                // Successful response
+                resolve(milliseconds);
+              } else {
+                // Network error or non-2xx status code
+                reject(new Error(`failed (${http.status})`));
+              }
             }
           };
           try {
@@ -83,16 +90,25 @@
         });
       }
 
-      async function testHosts(host, port, label) {
+async function testHosts(host, port, label) {
         const pings = [];
         resultElement.innerHTML += `${label} (${host}): `;
         for (let i = 0; i < 3; i++) {
-          const milliseconds = await ping(host, port);
-          pings.push(milliseconds);
-          resultElement.innerHTML += `${milliseconds.toFixed(2)}, `;
+          try {
+            const milliseconds = await ping(host, port);
+            pings.push(milliseconds);
+            resultElement.innerHTML += `${milliseconds.toFixed(2)}, `;
+          } catch (error) {
+            resultElement.innerHTML += `${error.message}, `;
+          }
         }
-        const averagePing = pings.reduce((sum, value) => sum + value, 0) / pings.length;
-        resultElement.innerHTML += `average ${averagePing.toFixed(2)}<br>`;
+
+        if (pings.length > 0) {
+          const averagePing = pings.reduce((sum, value) => sum + value, 0) / pings.length;
+          resultElement.innerHTML += `average ${averagePing.toFixed(2)}<br>`;
+        } else {
+          resultElement.innerHTML += `No successful pings<br>`;
+        }
       }
 
       fetch('https://ipapi.co/json/')
