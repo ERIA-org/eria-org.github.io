@@ -1,21 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ERIA connection test (Senayan)</title>
-</head>
-<body>
-  <h1>ERIA connection test (Senayan)</h1>
 
-  <script>document.write( "Last update：" + document.lastModified );
+<head>
+  <script src="asec.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERIA connection test (
+    <script>document.write(OFFICE_NAME);</script>)
+  </title>
+</head>
+
+<body>
+  <h1>ERIA connection test (<span id="officeName"></span>)</h1>
+
+  <script>document.write("Last update：" + document.lastModified);
   </script>
-  
-  <p>This test page is for those in Senayan office<br>
-  Click on the button below to begin testing HTTP access time to each hosts</p>
+
+  <p>This test page is for those in
+    <script>document.write(OFFICE_NAME);</script> office<br>
+
+  <p>
+    For <span id="otherOfficeName"></span> office, click <a id="otherOfficeURL" href="">here</a><br>
+    Click on the button below to begin testing HTTP access time to each host.
+  </p>
+
   <button id="pingButton">Test</button>
   <div id="result"></div>
   <p id="time"></p>
+
+
+  <script>
+    let OTHER_OFFICE;
+    let OTHER_OFFICE_URL;
+
+    if (OFFICE_NAME === "Senayan") {
+      OTHER_OFFICE = "ASEC";
+      OTHER_OFFICE_URL = "testconnection-asec.html";
+    } else {
+      OTHER_OFFICE = "Senayan";
+      OTHER_OFFICE_URL = "testconnection.html";
+    }
+
+    const officeName = document.getElementById('officeName');
+    const otherOfficeName = document.getElementById('otherOfficeName');
+    const otherOfficeURL = document.getElementById('otherOfficeURL');
+    officeName.innerText = OFFICE_NAME;
+    otherOfficeName.innerText = OTHER_OFFICE;
+    otherOfficeURL.href = OTHER_OFFICE_URL;
+
+  </script>
 
   <script>
     const pingButton = document.getElementById('pingButton');
@@ -31,7 +64,7 @@
           var http = new XMLHttpRequest();
 
           http.open("GET", host + ":" + port, true);
-          http.onreadystatechange = function() {
+          http.onreadystatechange = function () {
             if (http.readyState == 4) {
               var ended = new Date().getTime();
               var milliseconds = ended - started;
@@ -40,13 +73,13 @@
           };
           try {
             http.send(null);
-          } catch(exception) {
+          } catch (exception) {
             reject(exception);
           }
         });
       }
 
-      function delay(milliseconds){
+      function delay(milliseconds) {
         return new Promise(resolve => {
           setTimeout(resolve, milliseconds);
         });
@@ -92,25 +125,26 @@
         });
 
 
-              resultElement.innerHTML += "<br><br>Running speed test...";
+      resultElement.innerHTML += "<br><br>Running speed test...";
 
-const startTime = new Date().getTime();
-const xhr = new XMLHttpRequest();
-xhr.open("GET", "https://sample-videos.com/img/Sample-jpg-image-10mb.jpg", false); // Synchronous request
-xhr.send(null);
+      const startTime = new Date().getTime();
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://sample-videos.com/img/Sample-jpg-image-10mb.jpg", false); // Synchronous request
+      xhr.send(null);
 
-if (xhr.status === 200) {
-    const endTime = new Date().getTime();
-    const duration = endTime - startTime;
-    const speed = (10 / (duration / 1000) * 8).toFixed(2); // Speed in Mbps
-    resultElement.innerHTML += `Speed test completed in ${duration} ms<br>`;
-    resultElement.innerHTML += `Download speed: ${speed} Mbps`;
-} else {
-    resultElement.innerHTML += "Speed test failed";
-}
+      if (xhr.status === 200) {
+        const endTime = new Date().getTime();
+        const duration = endTime - startTime;
+        const speed = (10 / (duration / 1000) * 8).toFixed(2); // Speed in Mbps
+        resultElement.innerHTML += `Speed test completed in ${duration} ms<br>`;
+        resultElement.innerHTML += `Download speed: ${speed} Mbps`;
+      } else {
+        resultElement.innerHTML += "Speed test failed";
+      }
 
-      
+
     });
   </script>
 </body>
+
 </html>
