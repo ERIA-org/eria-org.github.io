@@ -109,7 +109,7 @@
         .finally(async () => {
           resultElement.innerHTML += "<br><br>";
           resultElement.innerHTML += "<h2>Test results (in milliseconds):</h2>";
-          await testHosts("http://192.168.0.1/login", "80", "ERIA (Senayan) router");
+          await testHosts(ROUTER_URL, "80", "ERIA (Senayan) router");
           await delay(1000);
           await testHosts("https://www.linknet.co.id", "443", "Linknet");
           await delay(1000);
