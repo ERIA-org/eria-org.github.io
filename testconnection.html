@@ -13,7 +13,17 @@
   <script>document.write( "Last update：" + document.lastModified );
   </script>
   
-  <p>This test page is for those in Senayan office<br>
+  <p>This test page is for those in <script>OFFICE_NAME</script> office<br>
+    <script>
+if (OFFICE_NAME == "Senayan") {
+    const OTHER_OFFICE = "ASEC";
+  const OTHER_OFFICE_URL = "testconnection-asec.html"
+} else {
+    const OTHER_OFFICE = "Senayan";
+  const OTHER_OFFICE_URL = "testconnection.html"
+}
+    </script>
+    For <script>OTHER_OFFICE</script> office, click <a href="<script>OTHER_OFFICE</script>">here</a><br>
   Click on the button below to begin testing HTTP access time to each hosts</p>
   <button id="pingButton">Test</button>
   <div id="result"></div>
