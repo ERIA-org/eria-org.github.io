@@ -5,15 +5,13 @@
   <script src="senayan.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ERIA connection test (
-    <script>document.write(OFFICE_NAME);</script>)
-  </title>
+  <script>document.write("<title>ERIA connection test (" + OFFICE_NAME +"</title>");</script>)
 </head>
 
 <body>
   <h1>ERIA connection test (<span id="officeName"></span>)</h1>
 
-  <script>document.write("Last update：" + document.lastModified);
+  <script>document.write("Last update：" + document.lastModified + " (PoC quality)");
   </script>
 
   <p>This test page is for those in
@@ -109,7 +107,7 @@
         .finally(async () => {
           resultElement.innerHTML += "<br><br>";
           resultElement.innerHTML += "<h2>Test results (in milliseconds):</h2>";
-          await testHosts("http://192.168.0.1/login", "80", "ERIA (Senayan) router");
+          await testHosts(ROUTER_URL, "80", "ERIA (Senayan) router");
           await delay(1000);
           await testHosts("https://www.linknet.co.id", "443", "Linknet");
           await delay(1000);
