@@ -1,7 +1,30 @@
 $ScriptPath = Split-Path -parent $MyInvocation.MyCommand.Definition
 
+'Test date:' > $ScriptPath\diagnose.txt
+Get-Date >> $ScriptPath\diagnose.txt
+'---------------------------------------------' >> $ScriptPath\diagnose.txt
+'' >> $ScriptPath\diagnose.txt
+'IP info:' >> $ScriptPath\diagnose.txt
+Invoke-RestMethod -Method Get -Uri "http://ip-api.com/json/"  >> $ScriptPath\diagnose.txt
+'---------------------------------------------' >> $ScriptPath\diagnose.txt
+'' >> $ScriptPath\diagnose.txt
+'PC info:' >> $ScriptPath\diagnose.txt
+Get-ComputerInfo  >> $ScriptPath\diagnose.txt
+'---------------------------------------------' >> $ScriptPath\diagnose.txt
+'' >> $ScriptPath\diagnose.txt
+'CPU usage info:' >> $ScriptPath\diagnose.txt
+(Get-WmiObject -Class win32_processor -ErrorAction Stop | Measure-Object -Property LoadPercentage -Average | Select-Object Average).Average  >> $ScriptPath\diagnose.txt
+'' >> $ScriptPath\diagnose.txt
+'---------------------------------------------' >> $ScriptPath\diagnose.txt
+'' >> $ScriptPath\diagnose.txt
+'RAM usage:' >> $ScriptPath\diagnose.txt
+Get-WmiObject win32_OperatingSystem |%{"Total Physical Memory: {0}KB`nFree Physical Memory : {1}KB`nTotal Virtual Memory : {2}KB`nFree Virtual Memory  : {3}KB" -f $_.totalvisiblememorysize, $_.freephysicalmemory, $_.totalvirtualmemorysize, $_.freevirtualmemory}   >> $ScriptPath\diagnose.txt
+
+'---------------------------------------------' >> $ScriptPath\diagnose.txt
+'' >> $ScriptPath\diagnose.txt
+
 ### Test local
-'1. LOCAL TESTS' > $ScriptPath\diagnose.txt
+'1. LOCAL TESTS' >> $ScriptPath\diagnose.txt
 '' >> $ScriptPath\diagnose.txt
 '' >> $ScriptPath\diagnose.txt
 '1-1 Test ping connectivity to ERIA router' >> $ScriptPath\diagnose.txt
