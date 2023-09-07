@@ -125,17 +125,17 @@ async function testHosts(host, port, label) {
           resultElement.innerHTML += "<h2>Test results (in milliseconds):</h2>";
           await testHosts(ROUTER_URL, "80", "ERIA (Senayan) router");
           await delay(1000);
-          await testHosts("https://corsproxy.io/?https://www.linknet.co.id", "443", "Linknet");
+          await testHosts("https://www.linknet.co.id", "443", "Linknet");
           await delay(1000);
-          await testHosts("https://corsproxy.io/?https://www.telkom.co.id", "443", "Telkom");
+          await testHosts("https://www.telkom.co.id", "443", "Telkom");
           await delay(1000);
-          await testHosts("https://corsproxy.io/?https://www.biznetnetworks.com", "443", "Biznet");
+          await testHosts("https://www.biznetnetworks.com", "443", "Biznet");
           await delay(1000);
-          await testHosts("https://corsproxy.io/?https://www.detik.com", "443", "Detik");
+          await testHosts("https://www.detik.com", "443", "Detik");
           await delay(1000);
-          await testHosts("https://corsproxy.io/?https://internetbeacon.msedge.net", "443", "Microsoft");
+          await testHosts("https://internetbeacon.msedge.net", "443", "Microsoft");
           await delay(1000);
-          await testHosts("https://corsproxy.io/?https://www.google.com", "443", "Google");
+          await testHosts("https://www.google.com", "443", "Google");
         });
 
 
